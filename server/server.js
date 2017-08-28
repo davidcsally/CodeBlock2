@@ -1,9 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
+const PORT = 3000;
 const app = express();
+
+
+const db = mongoose.connection.openUri('mongodb://user:password@ds163053.mlab.com:63053/codeblock');
+db.on('error', console.error.bind(console, 'ERROR connecting to database'));
+db.once('open', () => {
+  console.log('Sucessfully connected to database');
+});
 
 // TODO
   // connect to DB
@@ -25,7 +33,5 @@ app.get('/', (req, res, next) => {
 
 // SERVER RUNNING
 app.listen(3000, () => {
-  // const host = server.address().address;
-  // const port = server.address().port;
-  console.log(`CodeBlock is listening at: 3000`);
+  console.log(`CodeBlock is listening at: ${PORT}`);
 });
