@@ -6,11 +6,8 @@ const mongoose = require('mongoose');
 const PORT = 3000;
 const app = express();
 
-mongoose.connect('mongodb://user:password@ds163053.mlab.com:63053/codeblock', {
-  userMongoClient: true },
-);
 
-var db = mongoose.connection;
+const db = mongoose.connection.openUri('mongodb://user:password@ds163053.mlab.com:63053/codeblock');
 db.on('error', console.error.bind(console, 'ERROR connecting to database'));
 db.once('open', () => {
   console.log('Sucessfully connected to database');
