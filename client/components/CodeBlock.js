@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ErrorCount from './ErrorCount';
 // import Timer from './Timer';
 
-const codeProblems = [["There is no spoon"], ["var repl = str.replace(/^\s+|\s+$|\s+(?=\s)/g, '')"], ["The answer is 42"], ["Codesmith"]];
+const codeProblems = [["You ain't ready"], ["for (let i = 0; i < array.length; i++)"],['s = s.match(/\S+/g);'], ['var repl = str.replace(/^\s+|\s+$|\s+(?=\s)/g, " ")']];
 
 let i = 0;
 
@@ -13,7 +13,7 @@ class CodeBlock extends React.Component {
       code: ["Prepare Yourself"],
       textbox: [""],
       errors : 0,
-      time: {}, 
+      time: {},
       seconds: 20
     };
     this.timer = 0;
@@ -33,6 +33,7 @@ class CodeBlock extends React.Component {
     let newTextbox = this.state.textbox;
     if (typedCode[0].length == 1) {
       this.refs.userinput.value="";
+      this.startTimer();
       this.setState({code: codeProblems[i], textbox: [""], errors: 0}, () => {i++});
     } else if (userInput == typedCode[0].charAt()) {
       let correct = typedCode[0].substring(1);
@@ -83,9 +84,10 @@ class CodeBlock extends React.Component {
       time: this.secondsToTime(seconds),
       seconds: seconds,
     });
-    
+
     // Check if we're at zero.
-    if (seconds == 0) { 
+    if (seconds == 0) {
+      alert("LOSER!!!");
       clearInterval(this.timer);
     }
   }
@@ -94,14 +96,16 @@ class CodeBlock extends React.Component {
     return (
       <div>
           <p><span id="correct">{this.state.textbox}</span>{this.state.code}</p>
-        <form>
           <label id="input">
             User Input:
             <input type="text" onChange={this.handleChange} onKeyDown={this.startTimer} ref="userinput"/>
           </label>
-        </form>
-        {this.state.time.m}:{this.state.time.s}
+          <div id="clock">
+            {this.state.time.m}:{this.state.time.s}
+          </div>
+          <div id="errorbox">
         <ErrorCount errors={this.state.errors}/>
+          </div>
       </div>
     )
   };

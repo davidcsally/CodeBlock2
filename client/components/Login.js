@@ -1,13 +1,15 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Register from './Register';
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: ['Cliff', 'Jason', 'Mila'],
-      password: '',
-     };
+      username: [
+        'Cliff', 'Jason', 'Mila'
+      ],
+      password: ''
+    };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -15,10 +17,7 @@ class Login extends Component {
   }
 
   handleChange(event) {
-    setState({
-      username: event.target.username,
-      password: event.target.password
-    });
+    setState({username: event.target.username, password: event.target.password});
   }
 
   // when server is set up we want this to sent a GET request
@@ -28,11 +27,11 @@ class Login extends Component {
 
     for (let i = 0; i < arr.length; i++) {
       if (input === arr[i]) {
-        alert('Welcome ' + input); 
+        alert('Welcome ' + input);
         event.preventDefault();
         return
-      } 
-    }  
+      }
+    }
     alert('Wrong username or password');
   }
   passer(event) {
@@ -41,30 +40,28 @@ class Login extends Component {
 
   render() {
     return (
-    <div>
-      <div id="bander">
-        <h2>Login</h2>
-      </div>  
       <div>
-        <form onSubmit={this.handleSubmit}>
-          <div>
-          <label>
-            Username:
-            <input type="text" ref='input' onSubmit={this.handleSubmit} onChange={this.passer}/>
-          </label>
-          </div>
-          <div>
-          <label>
-            Password:
-            <input type="password" value={this.state.password} onChange={this.handleChange} />
-          </label>  
-          </div>
-        </form>
-        <span>Don't have an account?</span>
-        <span>
-        </span>
+        <div id="bander">
+          <h2>Login</h2>
         </div>
-      </div>    
+        <div>
+          <form onSubmit={this.handleSubmit}>
+            <div>
+              <label>
+                Username:
+                <input type="text" ref='input' onSubmit={this.handleSubmit} onChange={this.passer}/>
+              </label>
+            </div>
+            <div>
+              <label>
+                Password:
+                <input type="password" value={this.state.password} onChange={this.handleChange}/>
+              </label>
+            </div>
+          </form>
+          <span>Don't have an account?</span>
+        </div>
+      </div>
     );
   }
 }
