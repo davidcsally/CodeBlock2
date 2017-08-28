@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node_modules/.bin/webpack-dev-server",
     "pack": "node_modules/.bin/webpack -w",
-    "server": "node server.js"
+    "server": "node server/server.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,8 @@
   "homepage": "https://github.com/jasonytak/scratch#readme",
   "dependencies": {
     "babel": "^6.23.0",
+    "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.3",
     "express": "^4.15.4",
     "file-loader": "^0.11.2",
     "react": "^15.6.1",
