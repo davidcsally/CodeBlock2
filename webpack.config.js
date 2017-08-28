@@ -1,12 +1,12 @@
 const path = require('path');
 
 module.exports = {
-entry: './client/index.js',
-output: {
-  path: path.join(__dirname, '/client'),
-  publicPath: '/client',
-  filename: 'bundle.js'
-},
+  entry: './client/index.js',
+  output: {
+    path: path.join(__dirname, '/public'),
+    publicPath: '/public',
+    filename: 'bundle.js',
+  },
   module: {
     loaders: [
       {
@@ -15,13 +15,13 @@ output: {
         loader: 'babel-loader',
         query: {
           presets: ['es2015', 'react'],
-          plugins: ['transform-class-properties']
-        }
+          plugins: ['transform-class-properties'],
+        },
       },
       {
         test: /\.scss$/,
-        loaders: ['style-loader', 'css-loader', 'sass-loader']
+        loaders: ['style-loader', 'css-loader', 'sass-loader'],
       },
-    ]
-  }
-}
+    ],
+  },
+};

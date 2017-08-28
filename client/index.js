@@ -5,5 +5,5 @@ import styles from './css/app.scss';
 
 render(
   <App />,
-  document.getElementById('content')
+  document.getElementById('content'),
 );
