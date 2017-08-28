@@ -31,10 +31,10 @@ const UserController = {
     },
 
     getTopUsers(request, response) {
-        User.find({}.limit(10).sort({ score: -1 }), function(err, data) {
+        User.find({}, function(err, data) {
             if(err) throw err;
             response.send(data)
-        })
+        }).limit(10).sort({ score: -1 })
     },
 
     updateUser(request, response) {

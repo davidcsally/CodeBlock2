@@ -9,7 +9,6 @@ const app = express();
 
 // Connect to MongooseDB
 const db = mongoose.connection.openUri('mongodb://user:password@ds163053.mlab.com:63053/codeblock');
-
 db.on('error', () => {
   console.log('ERROR connecting to database');
 });
