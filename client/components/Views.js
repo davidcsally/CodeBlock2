@@ -6,7 +6,7 @@ import CodeBlock from './CodeBlock';
 class Views extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       username: ['Cliff', 'Jason', 'Mila'],
       active : 'Login',
       isLoggedIn: false
@@ -39,18 +39,18 @@ class Views extends Component {
     return (
       <div>
         {active === 'Login' ? (
-          <Login code={this.handleChange}/> 
+          <Login code={this.handleChange}/>
         ) : testPage === true ? (
-          <CodeBlock /> 
+          <CodeBlock />
         ) : active === 'Register' ? (
           <Register />
         ) : null}
         <button type="button" onClick={this.handleClick}>
          Login/Register
         </button>
-      </div>  
+      </div>
     );
-  }  
-}   
+  }
+}
 
 export default Views;
