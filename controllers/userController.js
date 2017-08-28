@@ -34,7 +34,7 @@ const UserController = {
     updateUser(request, response) {
         User.findOne({name: request.body.name}, function(err, data) {
             if(err) throw err;
-            response.send(data)
+            response.send(data);
         })
     }
 }
