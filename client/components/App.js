@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Login from './LogIn/Login.js';
-import Register from './LogIn/Register.js';
-import CodeBlock from './Game/CodeBlock.js';
+import Login from './Login.js';
+import Register from './Register.js';
+import CodeBlock from './CodeBlock.js';
 import axios from 'axios';
 
 class App extends Component {
