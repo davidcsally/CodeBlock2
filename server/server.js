@@ -24,8 +24,15 @@ app.use(
   bodyParser.urlencoded({ extended: true }),
   bodyParser.json(),
   cookieParser(),
+  (request, response, next) => {
+    response.header('Access-Control-Allow-Origin', '*');
+    response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    response.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PATCH, DELETE");
+    next();
+  },
   express.static('./'),
 );
+
 
 // ROUTERS
 
