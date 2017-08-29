@@ -1,8 +1,8 @@
 const User = require('../model/UserModel');
 
 const UserController = {
-  createUser(request, response, next) {
-    // console.log('creating user: ', request.body);
+  /** this is good */
+  createUser(request, res, next) {
     const newUser = new User({
       name: request.body.name,
       password: request.body.password,
@@ -11,20 +11,25 @@ const UserController = {
       accuracy: request.body.accuracy,
     });
 
-    newUser.save((err, data) => {
+    // don't add duplicates
+    User.findOne({ name: newUser.name }, (err, data) => {
       if (err) throw err;
+      if (data === null) {
 
-      response.locals = data;
-      next();
+        // save if user is new
+        newUser.save((error, newDoc) => {
+          if (error) throw error;
+
+          res.locals = newDoc;
+          next();
+        });
+      } else res.status(400).json('ERROR: Duplicate User');
     });
   },
 
   /** This is solid */
   getUser(request, response, next) {
-    // console.log('req.body', request.body);
-    // console.log('name: ', request.body.name);
     User.findOne({ name: request.body.name }, (err, data) => {
-      // console.log(data);
       if (err) return console.log(err);
 
       // check if password matches
@@ -53,13 +58,15 @@ const UserController = {
       accuracy: request.body.accuracy,
     };
 
-    User.findOneAndUpdate({ name: request.body.name }, newData, (err, data) => {
-      if (err) throw err;
-
-      // this will send back the old data, not the new data
-      response.send(data);
-      response.locals = data;
-      next();
+    User.findOneAndUpdate(
+      { name: request.body.name },
+      { $set: newData },
+      { new: true },
+      (err, data) => {
+        if (err) throw err;
+        // this will send back the old data, not the new data
+        response.locals = data;
+        next();
     });
   },
 };

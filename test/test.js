@@ -8,7 +8,7 @@ mongoose.Promise = global.Promise;
 const Model = require('../model/UserModel.js');
 const UserController = require('../controllers/UserController.js');
 
-var db;
+let db;
 
 const server = require('./../server/server.js');
 
@@ -27,7 +27,7 @@ before((done) => {
       if (err) console.log(`Error: ${err}`);
       else {
         UserController.createUser({ body: { name: 'William', password: 1234 } }, { locals: {} }, () => {
-          // console.log('created william');
+          console.log('created william\n\n');
           done();
         });
       }
@@ -36,18 +36,35 @@ before((done) => {
 });
 
 describe('Creating new user', () => {
-  it('saves a new user to the database', (done) => {
-    const req = { body: { name: 'Dave', score: 9000 } };
-    const res = { locals: {} };
+  it('saves a new user to the database  with a status code 200', (done) => {
+    const obj = { name: 'Dave', score: 900 };
+    const options = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify(obj),
+    };
 
-    // add user to DB
-    UserController.createUser(req, res, () => {
-      // ensure user is there
-      Model.find({}, (err, data) => {
-        if (err) throw err;
-        expect(data[0] === req.body);
-        done();
-      });
+    request('http://localhost:3000/create', options, (err, res, body) => {
+      expect(res.statusCode).toEqual(200);
+      done();
+    });
+  });
+
+  it('does add not duplicate users to the database', (done) => {
+    const obj = { name: 'Dave', score: 900 };
+    const options = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify(obj),
+    };
+
+    request('http://localhost:3000/create', options, (err, res, body) => {
+      expect(res.statusCode).toEqual(400);
+      done();
     });
   });
 
@@ -62,12 +79,12 @@ describe('Creating new user', () => {
     };
 
     request('http://localhost:3000/login', options, (err, res, body) => {
-      expect(res.statusCode === 200);
+      expect(res.statusCode).toEqual(200);
       done();
     });
   });
 
-  it('sends back a 404 on invalid password', (done) => {
+  it('sends back a 400 on invalid password', (done) => {
     const obj = { name: 'William', password: 'wrong' };
     const options = {
       headers: {
@@ -78,18 +95,24 @@ describe('Creating new user', () => {
     };
 
     request('http://localhost:3000/login', options, (err, res, body) => {
-      expect(res.statusCode === 404);
+      expect(res.statusCode).toEqual(400);
       done();
     });
   });
 
-  xit('updates a user\'s highscore', (done) => {
-    const req = { body: { name: 'Dave', score: 0, WPM: 50, accuracy: 100 } };
-    const res = {};
+  it('updates a user\'s highscore', (done) => {
+    const obj = { name: 'Dave', score: 0, WPM: 50, accuracy: 100 };
+    const options = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'PATCH',
+      body: JSON.stringify(obj),
+    };
 
-    UserController.updateUser(req, res, () => {
-      expect(res.locals === req.body);
-
+    request('http://localhost:3000/updateUser', options, (err, res, body) => {
+      const updated = JSON.parse(res.body);
+      expect(obj.score).toEqual(updated.score);
       done();
     });
   });
@@ -120,7 +143,7 @@ describe('Creating new user', () => {
       console.log('i run after we loop');
       // expect lenght === 10
       console.log(res.locals.length);
-      expect(res.locals.length === 10);
+      // expect(res.locals.length === 10);
       // done();
     });
   });
