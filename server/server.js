@@ -46,6 +46,8 @@ app.patch('/updateUser', UserController.updateUser, (req, res) => {
 
 /** Get highscores */
 app.get('/highscores', UserController.getTopUsers, (req, res) => {
+  // console.log('sending highscores');
+  // console.log(res.locals);
   res.send(res.locals);
 });
 

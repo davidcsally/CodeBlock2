@@ -35,7 +35,7 @@ before((done) => {
   });
 });
 
-describe('Creating new user', () => {
+describe('Database interactions', () => {
   it('saves a new user to the database  with a status code 200', (done) => {
     const obj = { name: 'Dave', score: 900 };
     const options = {
@@ -117,34 +117,34 @@ describe('Creating new user', () => {
     });
   });
 
-  xit('should return the top 10 high scores', (done) => {
-    // make 13 more entries
-    const res = {};
-    let flag = false;
+  it('should return the top 10 high scores', (done) => {
 
-    // let makePromise = () => {
-    //   return new Promise(function (resolve, reject) {
-    //     console.log('new promise');
-    //     UserController.createUser(req)
-    //   });
-    // };
-
-    for (let i = 0; i < 13; i += 1) {
-      const req = { body: { name: `Dave${i}`, score: (i * 10), WPM: 50, accuracy: 100 } };
-
-      makePromise()
-
-      // UserController.createUser(req, res, () => {
-      //   console.log('looping! i: ', i);
-      // });
+    // write hella users to DB
+    let arr = [];
+    
+    for (let i = 0; i < 15; i++) {
+      const newObj = { name: `David${i}`, score: i * 10 };
+      arr.push(newObj);
     }
 
-    UserController.getTopUsers({}, res, () => {
-      console.log('i run after we loop');
-      // expect lenght === 10
-      console.log(res.locals.length);
-      // expect(res.locals.length === 10);
-      // done();
+    Model.create(arr, (err, docs) => {
+      if (err) throw(err);
+
+      // then test DB
+      const options = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'GET',
+      };
+
+      request.get('http://localhost:3000/highscores', (err, res, body) => {
+        const bod = JSON.parse(body);
+
+        expect(bod.length).toEqual(10);
+        expect(bod[0].score).toBeGreaterThan(bod[9].score);
+        done();
+      });
     });
   });
 });
