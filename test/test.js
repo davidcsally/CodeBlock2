@@ -26,8 +26,17 @@ before((done) => {
     Model.remove({}, (err) => {
       if (err) console.log(`Error: ${err}`);
       else {
-        UserController.createUser({ body: { name: 'William', password: 1234 } }, { locals: {} }, () => {
-          console.log('created william\n\n');
+
+        const obj = { name: 'William', score: 9, password: 1234 };
+        const options = {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+          body: JSON.stringify(obj),
+        };
+
+        request('http://localhost:3000/create', options, (err, res, body) => {
           done();
         });
       }
@@ -37,7 +46,7 @@ before((done) => {
 
 describe('Database interactions', () => {
   it('saves a new user to the database  with a status code 200', (done) => {
-    const obj = { name: 'Dave', score: 900 };
+    const obj = { name: 'Dave', score: 900, password: 1234 };
     const options = {
       headers: {
         'Content-Type': 'application/json',
@@ -52,8 +61,39 @@ describe('Database interactions', () => {
     });
   });
 
+  it('does not save empty users to the database', (done) => {
+
+    const options = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify({}),
+    };
+
+    request('http://localhost:3000/create', options, (err, res, body) => {
+      expect(res.statusCode).toEqual(400);
+      done();
+    });
+  });
+
+  it('does not allow empty strings', (done) => {
+    const options = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify({ name: '', password: '' }),
+    };
+
+    request('http://localhost:3000/create', options, (err, res, body) => {
+      expect(res.statusCode).toEqual(400);
+      done();
+    });
+  });
+
   it('does add not duplicate users to the database', (done) => {
-    const obj = { name: 'Dave', score: 900 };
+    const obj = { name: 'Dave', score: 900, password: 1234 };
     const options = {
       headers: {
         'Content-Type': 'application/json',
@@ -123,7 +163,7 @@ describe('Database interactions', () => {
     let arr = [];
     
     for (let i = 0; i < 15; i++) {
-      const newObj = { name: `David${i}`, score: i * 10 };
+      const newObj = { name: `David${i}`, score: i * 10, password: 1234 };
       arr.push(newObj);
     }
 

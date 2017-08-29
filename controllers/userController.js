@@ -3,27 +3,34 @@ const User = require('../model/UserModel');
 const UserController = {
   /** this is good */
   createUser(req, res, next) {
-    const newUser = new User({
-      name: req.body.name,
-      password: req.body.password,
-      score: req.body.score,
-      WPM: req.body.WPM,
-      accuracy: req.body.accuracy,
-    });
+    if (!req.body.hasOwnProperty('name')) return res.status(400).json('Must enter a username!');
+    else if (!req.body.hasOwnProperty('password')) return res.status(400).json('Must enter a password!');
+    else if (req.body.name === '') return res.status(400).json('Must enter a username!');
+    else if (req.body.password === '') return res.status(400).json('Must enter a password!');
 
-    // don't add duplicates
-    User.findOne({ name: newUser.name }, (err, data) => {
-      if (err) throw err;
-      if (data === null) {
-        // save if user is new
-        newUser.save((error, newDoc) => {
-          if (error) throw error;
+    else {
+      const newUser = new User({
+        name: req.body.name,
+        password: req.body.password,
+        score: req.body.score,
+        WPM: req.body.WPM,
+        accuracy: req.body.accuracy,
+      });
 
-          res.locals = newDoc;
-          next();
-        });
-      } else res.status(400).json('ERROR: Duplicate User');
-    });
+      // don't add duplicates
+      User.findOne({ name: newUser.name }, (err, data) => {
+        if (err) throw err;
+        if (data === null) {
+          // save if user is new
+          newUser.save((error, newDoc) => {
+            if (error) throw error;
+
+            res.locals = newDoc;
+            next();
+          });
+        } else res.status(400).json('ERROR: Duplicate User');
+      });
+    }
   },
 
   /** This is solid */
@@ -41,6 +48,7 @@ const UserController = {
     });
   },
 
+  /** this is working */
   getTopUsers(req, res, next) {
     User.find({}, (err, data) => {
       if (err) throw err;
