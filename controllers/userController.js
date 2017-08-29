@@ -1,66 +1,72 @@
 const User = require('../model/UserModel');
 
 const UserController = {
-  createUser(request, response, next) {
-    // console.log('creating user: ', request.body);
+  /** this is good */
+  createUser(req, res, next) {
     const newUser = new User({
-      name: request.body.name,
-      password: request.body.password,
-      score: request.body.score,
-      WPM: request.body.WPM,
-      accuracy: request.body.accuracy,
+      name: req.body.name,
+      password: req.body.password,
+      score: req.body.score,
+      WPM: req.body.WPM,
+      accuracy: req.body.accuracy,
     });
 
-    newUser.save((err, data) => {
+    // don't add duplicates
+    User.findOne({ name: newUser.name }, (err, data) => {
       if (err) throw err;
+      if (data === null) {
+        // save if user is new
+        newUser.save((error, newDoc) => {
+          if (error) throw error;
 
-      response.locals = data;
-      next();
+          res.locals = newDoc;
+          next();
+        });
+      } else res.status(400).json('ERROR: Duplicate User');
     });
   },
 
   /** This is solid */
-  getUser(request, response, next) {
-    // console.log('req.body', request.body);
-    // console.log('name: ', request.body.name);
-    User.findOne({ name: request.body.name }, (err, data) => {
-      // console.log(data);
+  getUser(req, res, next) {
+    User.findOne({ name: req.body.name }, (err, data) => {
       if (err) return console.log(err);
 
       // check if password matches
         // TODO BCrypt
-      if (request.body.password === data.password) {
-        response.locals = data;
-        response.status(200);
+      if (req.body.password === data.password) {
+        res.locals = data;
+        res.status(200);
         next();
-      } else response.status(400).json('INCORRECT PASSWORD!');
+      } else res.status(400).json('INCORRECT PASSWORD!');
     });
   },
 
-  getTopUsers(request, response, next) {
+  getTopUsers(req, res, next) {
     User.find({}, (err, data) => {
       if (err) throw err;
-      response.locals = data;
+      res.locals = data;
       next();
-         response.send(data);
+      // res.send(data);
     }).limit(10).sort({ score: -1 });
   },
 
-  updateUser(request, response, next) {
+  /** 👌🏻 Good shit */
+  updateUser(req, res, next) {
     const newData = {
-      score: request.body.score,
-      WPM: request.body.WPM,
-      accuracy: request.body.accuracy,
+      score: req.body.score,
+      WPM: req.body.WPM,
+      accuracy: req.body.accuracy,
     };
 
-    User.findOneAndUpdate({ name: request.body.name }, newData, (err, data) => {
-      if (err) throw err;
-
-      // this will send back the old data, not the new data
-      response.send(data);
-      response.locals = data;
-      next();
-    });
+    User.findOneAndUpdate(
+      { name: req.body.name },
+      { $set: newData },
+      { new: true },  // this is REQUIRED to send back updated data
+      (err, data) => {
+        if (err) throw err;
+        res.locals = data;
+        next();
+      });
   },
 };
 
