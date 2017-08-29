@@ -1,57 +1,67 @@
 const User = require('../model/UserModel');
 
 const UserController = {
-    createUser (request, response) {
-        const newUser = new User({
-            name: request.body.name,
-            password: request.body.password,
-            score: request.body.score,
-            WPM: request.body.WPM,
-            accuracy: request.body.accuracy,
-        });
+  createUser(request, response, next) {
+    // console.log('creating user: ', request.body);
+    const newUser = new User({
+      name: request.body.name,
+      password: request.body.password,
+      score: request.body.score,
+      WPM: request.body.WPM,
+      accuracy: request.body.accuracy,
+    });
 
-        newUser.save(function (err, data) {
-            if(err) throw err;
-            response.send(data);
-        });
-    },
+    newUser.save((err, data) => {
+      if (err) throw err;
 
-    getUser(request, response) {
-        console.log('req.body', request.body);
-        console.log('name: ', request.body.name);
-        User.findOne({ name: request.body.name }, (err, data) => {
-            // if(err) throw err;
-            // response.send(data)
-            if (err) console.log(err);
-            else {
-                console.log('found!', data);
-                response.json(data);
-            }
-        })
-    },
+      response.locals = data;
+      next();
+    });
+  },
 
-    getTopUsers(request, response) {
-        User.find({}, function(err, data) {
-            if(err) throw err;
-            response.send(data)
-        }).limit(10).sort({ score: -1 })
-    },
+  /** This is solid */
+  getUser(request, response, next) {
+    // console.log('req.body', request.body);
+    // console.log('name: ', request.body.name);
+    User.findOne({ name: request.body.name }, (err, data) => {
+      // console.log(data);
+      if (err) return console.log(err);
 
-    updateUser(request, response) {
+      // check if password matches
+        // TODO BCrypt
+      if (request.body.password === data.password) {
+        response.locals = data;
+        response.status(200);
+        next();
+      } else response.status(400).json('INCORRECT PASSWORD!');
+    });
+  },
 
-        const newData = {
-            score: request.body.score,
-            WPM: request.body.WPM,
-            accuracy: request.body.accuracy,
-        };
+  getTopUsers(request, response, next) {
+    User.find({}, (err, data) => {
+      if (err) throw err;
+      response.locals = data;
+      next();
+         response.send(data);
+    }).limit(10).sort({ score: -1 });
+  },
 
-        User.findOneAndUpdate({name: request.body.name}, newData, function(err, data) {
-            if(err) throw err;
+  updateUser(request, response, next) {
+    const newData = {
+      score: request.body.score,
+      WPM: request.body.WPM,
+      accuracy: request.body.accuracy,
+    };
 
-            // this will send back the old data, not the new data
-            response.send(data);
-        });
-    }
-}
+    User.findOneAndUpdate({ name: request.body.name }, newData, (err, data) => {
+      if (err) throw err;
+
+      // this will send back the old data, not the new data
+      response.send(data);
+      response.locals = data;
+      next();
+    });
+  },
+};
 
 module.exports = UserController;

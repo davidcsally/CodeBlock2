@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const UserController = require('../controllers/UserController');
 
+mongoose.Promise = global.Promise;
 const PORT = 3000;
 const app = express();
 
@@ -29,16 +30,24 @@ app.use(
 // ROUTERS
 
 /** Create User */
-app.post('/create', UserController.createUser);
+app.post('/create', UserController.createUser, (req, res) => {
+  res.send(res.locals);
+});
 
 /** Log in */
-app.post('/login', UserController.getUser);
+app.post('/login', UserController.getUser, (req, res) => {
+  res.send(res.locals);
+});
 
 /** Update User */
-app.patch('/updateUser', UserController.updateUser);
+app.patch('/updateUser', UserController.updateUser, (req, res) => {
+  res.send(res.locals);
+});
 
 /** Get highscores */
-app.get('/highscores', UserController.getTopUsers);
+app.get('/highscores', UserController.getTopUsers, (req, res) => {
+  res.send(res.locals);
+});
 
 /** Serve Index */
 app.get('/', (req, res) => {
