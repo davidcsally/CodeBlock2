@@ -17,17 +17,14 @@ db.once('open', () => {
   console.log('Sucessfully connected to database');
 });
 
-// TODO
-  // allow CORs?
-
 app.use(
   bodyParser.urlencoded({ extended: true }),
   bodyParser.json(),
   cookieParser(),
-  (request, response, next) => {
-    response.header('Access-Control-Allow-Origin', '*');
-    response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    response.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PATCH, DELETE");
+  (req, res, next) => { // allow CORs
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PATCH, DELETE');
     next();
   },
   express.static('./'),
