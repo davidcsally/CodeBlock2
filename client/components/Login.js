@@ -7,8 +7,6 @@ class Login extends Component {
     constructor() {
         super();
         this.state = {
-            // username: '',
-            // password: '',
             checkMe: false 
         }
         this.handleCredentials = this.handleCredentials.bind(this);

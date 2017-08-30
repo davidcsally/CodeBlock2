@@ -1,47 +1,44 @@
+// Requires these files in -> npm install them
 const expect = require('expect');
 const mongoose = require('mongoose');
 const request = require('request');
 
-mongoose.Promise = global.Promise;
+mongoose.Promise = global.Promise;  // optional, hides depricated warning
 
+// Our Model and UserController files
 const Model = require('../model/UserModel.js');
 const UserController = require('../controllers/UserController.js');
 
-let db;
+let db; // reference to the database
 
-const server = require('./../server/server.js');
+const server = require('./../server/server.js'); // our server file, starts the server
 
 // Initially connect to DB
+/** Before the test runs, connect to  clear the database and add an inital entry */
 before((done) => {
-  db = mongoose.connection.openUri('mongodb://localhost/user');
-  db.on('error', () => {
-    console.log('ERROR connecting');
+
+  // drops the database
+  Model.remove({}, (err) => {
+    if (err) console.log(`Error: ${err}`);
+    else {
+      // define the user
+      const obj = { name: 'William', score: 9, password: 1234 };
+
+      // define parameters for POST request
+      const options = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify(obj),
+      };
+
+      // make a POST request to the server using 'npm request' module
+      request('http://localhost:3000/create', options, (err, res, body) => {
+        done();
+      });
+    }
   });
-
-  db.once('open', () => {
-    console.log('Connected to test DB\n\n');
-
-    // THIS drops the database
-    Model.remove({}, (err) => {
-      if (err) console.log(`Error: ${err}`);
-      else {
-
-        const obj = { name: 'William', score: 9, password: 1234 };
-        const options = {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'POST',
-          body: JSON.stringify(obj),
-        };
-
-        request('http://localhost:3000/create', options, (err, res, body) => {
-          done();
-        });
-      }
-    });
-  });
-});
 
 describe('Database interactions', () => {
   it('saves a new user to the database  with a status code 200', (done) => {
@@ -54,11 +51,13 @@ describe('Database interactions', () => {
       body: JSON.stringify(obj),
     };
 
+    // make a POST at '/create' route, and check status code, call done to proceed to next test
     request('http://localhost:3000/create', options, (err, res, body) => {
       expect(res.statusCode).toEqual(200);
       done();
     });
   });
+});
 
   it('does not save empty users to the database', (done) => {
 
