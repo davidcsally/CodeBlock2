@@ -10,7 +10,7 @@ class App extends Component {
     super();
     this.state = {
       username: '',
-      view: 'gameover',
+      view: 'login',
     };
     this.changeView = this.changeView.bind(this);
     this.changeGame = this.changeGame.bind(this);
