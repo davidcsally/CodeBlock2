@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import Codeblock from './Codeblock.js'
+// import Codeblock from './Codeblock.js'
 import Register from './Register.js'
 
 class Login extends Component {
@@ -27,7 +27,7 @@ class Login extends Component {
         axios.post('/login', { name: document.getElementById('username').value, password: document.getElementById('password').value})
         .then((response) => {
             if(response.data !== null){
-                console.log(response)
+                // console.log(response)
                 let username = document.getElementById('username').value; 
                 this.props.getBack(username, {checkMe: !this.state.checkMe }) //This is supposed to change views to CodeBlock.js
             } else{
