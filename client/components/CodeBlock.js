@@ -3,6 +3,7 @@ import ErrorCount from './ErrorCount';
 import Score from './Score';
 import Accuracy from './Accuracy'
 import Timer from './Timer'
+import Leaderboard from './Leaderboard'
 import axios from 'axios'
 // import Timer from './Timer';
 
@@ -154,7 +155,7 @@ class CodeBlock extends React.Component {
 
 
       this.setState({
-        code: ["Prepare Yourself"],
+        code: ["Prepared Yourself"],
         textbox: [""],
         errors: 0,
         time: {},
@@ -177,7 +178,7 @@ class CodeBlock extends React.Component {
           User Input:
             <input type="text" onChange={this.handleChange} onKeyDown={this.startTimer} ref="userinput" />
         </label>
-
+        
         <div>
           <Timer minutes={this.state.time.m} seconds={this.state.time.s} />
         </div>
@@ -192,6 +193,10 @@ class CodeBlock extends React.Component {
 
         <div id="errorbox">
           <ErrorCount errors={this.state.errors} />
+        </div>
+
+        <div>
+          <Leaderboard />
         </div>
 
 
