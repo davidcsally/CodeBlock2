@@ -3,6 +3,7 @@ import ErrorCount from './ErrorCount';
 import Score from './Score';
 import Accuracy from './Accuracy'
 import Timer from './Timer'
+import Leaderboard from './Leaderboard'
 import axios from 'axios'
 
 let i = 0;
@@ -120,7 +121,7 @@ class CodeBlock extends Component {
 
       // reset game      
       this.setState({
-        code: ["Prepare Yourself"],
+        code: ["Prepared Yourself"],
         textbox: [""],
         errors: 0,
         seconds: 20,
@@ -145,7 +146,10 @@ class CodeBlock extends Component {
         <Score score={this.state.score} />
         <Accuracy accuracy={this.state.accuracy} />
         <div id="errorbox"> <ErrorCount errors={this.state.errors} /> </div>
-      
+        <div>
+          <Leaderboard />
+        </div>
+
       </div>
     )
   };
