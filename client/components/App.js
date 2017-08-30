@@ -40,7 +40,7 @@ class App extends Component {
     }
 
     if(this.state.checkMe) {
-      needsToRender = <CodeBlock />
+      needsToRender = <CodeBlock user={this.state.username}/>
     }
     
     //The app's view
