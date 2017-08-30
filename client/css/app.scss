@@ -1,6 +1,33 @@
+// Login
+.login {
+  border: 1px solid black;
+  margin: auto;
+  padding: auto;
+  align-content: center;
+  text-align: center;
+}
 
-div {
-  white-space: pre-wrap;
+// code-block
+.code-block {
+  align-content: center;
+  text-align: center;
+}
+
+.register {
+  align-content: center;
+  text-align: center;
+}
+
+.leaderboard {
+  background: black;
+  font-family: press_start_2pregular, Courier New, Courier, monospace;
+  font-weight: 900;
+  color: #BFBF1D;
+  border: 1px solid black;
+}
+
+.ranking:hover {
+  background: #B1D7DE;
 }
 
 span {
@@ -10,7 +37,6 @@ span {
 p {
   color: blue;
   font-size: 45px;
-  padding-right: 15%;
 }
 
 #error {
@@ -19,24 +45,22 @@ p {
 }
 
 #clock {
-  margin-left: 5%;
   padding-top: 10px;
 }
-//
+
 #errorbox {
   padding-top: 10px;
 }
-//
-// #input {
-//   margin-left: 40%;
-// }
-
 
 #header {
   color: red;
-  margin-left: 38%;
+  margin: 0 auto;
+  padding: auto;
+  text-align: center;
+  width: 140px;
 }
 
-#content {
-  margin-left: 30%;
+h1 {
+  border: 1px solid black;  
 }
+

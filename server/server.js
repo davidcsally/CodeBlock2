@@ -96,8 +96,8 @@ app.get('/highscores', UserController.getTopUsers, (req, res) => {
  *
 */
 app.get('/', (req, res) => {
-  res.render('index.html');
-  res.end();
+  // res.render('index.html');
+  // res.end();
 });
 
 /** Start the server */

@@ -15,7 +15,7 @@ class Ranking extends Component {
       }
 
     return (
-      <div>
+      <div className="ranking">
           Name: {name}
           <br/>
           Score: {score}
