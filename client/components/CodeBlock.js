@@ -4,57 +4,34 @@ import Score from './Score';
 import Accuracy from './Accuracy'
 import Timer from './Timer'
 import axios from 'axios'
-// import Timer from './Timer';
-
-const codeProblems = [["You ain't ready"], ["for (let i = 0; i < array.length; i++)"], ['s = s.match(/\S+/g);'], ['var repl = str.replace(/^\s+|\s+$|\s+(?=\s)/g, " ")']];
 
 let i = 0;
+const NUM_SECONDS = 5;
+const codeProblems = [["You ain't ready"],
+                      ["for (let i = 0; i < array.length; i++)"],
+                      ['s = s.match(/\S+/g);'],
+                      ['var repl = str.replace(/^\s+|\s+$|\s+(?=\s)/g, " ")']];
 
-class CodeBlock extends React.Component {
+class CodeBlock extends Component {
   constructor() {
     super();
     this.state = {
       code: ["Prepare Yourself"],
       textbox: [""],
       errors: 0,
-      time: {},
-      seconds: 20,
+      seconds: NUM_SECONDS,
       score: 0,
       accuracy: 0,
       length: 0,
     };
     this.timer = 0;
-    this.startTimer = this.startTimer.bind(this);
     this.countDown = this.countDown.bind(this);
   }
 
   handleError = () => {
-    let newError = this.state.errors;
-    newError++;
-    this.setState({ errors: newError });
+    this.setState({ errors: this.state.errors + 1 });
   };
-
-  handleCorrectAnswer = () => {
-    let score = this.state.score;
-    score = score + 10;
-    this.setState({ score: score })
-  }
-
-  handleAccuracy = () => {
-    let accuracy = this.state.accuracy;
-
-    accuracy = 100 - Math.round((this.state.errors / this.state.length) * 100)
-    this.setState({ accuracy: accuracy })
-  }
-
-  handleLength = () => {
-    let length = this.state.length;
-    length++;
-    this.setState({ length: length })
-  }
-
-
-
+  
   handleChange = (event) => {
     let typedCode = this.state.code; //Prepare loser yourself
     let userInput = this.refs.userinput.value;
@@ -72,12 +49,12 @@ class CodeBlock extends React.Component {
           //update data in server (axios patch request)
           axios.patch('http://localhost:3000/updateUser', { name: this.props.user, score: this.state.score, accuracy: this.state.accuracy, WPM: 0 })
           console.log('updated database')
+          
           // reset game
           this.setState({
             code: ["Prepare Yourself"],
             textbox: [""],
             errors: 0,
-            time: {},
             seconds: 20,
             score: 0,
             accuracy: 0,
@@ -92,79 +69,65 @@ class CodeBlock extends React.Component {
       typedCode.push(correct);
       newTextbox.push(userInput);
       this.refs.userinput.value = "";
-      this.handleLength();
-      this.handleAccuracy();
-      this.handleCorrectAnswer();
-      this.setState({ code: typedCode, textbox: newTextbox });
+      this.setState({
+        code: typedCode,
+        textbox: newTextbox,
+        score: this.state.score + 10,
+        length: this.state.length + 1,
+        accuracy: 100 - Math.round((this.state.errors / this.state.length) * 100),
+      });
     } else {
-
       this.refs.userinput.value = "";
       this.handleError();
     };
   };
 
-  secondsToTime(secs) {
-    let hours = Math.floor(secs / (60 * 60));
-
-    let divisor_for_minutes = secs % (60 * 60);
-    let minutes = Math.floor(divisor_for_minutes / 60);
-
-    let divisor_for_seconds = divisor_for_minutes % 60;
-    let seconds = Math.ceil(divisor_for_seconds);
-
-    let obj = {
-      "h": hours,
-      "m": minutes,
-      "s": seconds
-    };
-    return obj;
-  }
-
-  componentDidMount() {
-    let timeLeftVar = this.secondsToTime(this.state.seconds);
-    this.setState({ time: timeLeftVar });
-  }
-
-  startTimer() {
+  /** Start the countdown timer */
+  startTimer = () => {
     if (this.timer == 0) {
       this.timer = setInterval(this.countDown, 1000);
     }
   }
 
+  /** POST highscores to database */
+  postHighscore = () => {
+    const newData = {
+      name: this.props.user,
+      score: this.state.score,
+      accuracy: this.state.accuracy,
+      WPM: 0,
+    }
+
+    // POST new score
+    axios.patch('http://localhost:3000/updateUser', newData);
+  }
+
+  /** function to countdown the timer, this will update the state every second */
   countDown() {
     // Remove one second, set state so a re-render happens.
-    let seconds = this.state.seconds - 1;
-    this.setState({
-      time: this.secondsToTime(seconds),
-      seconds: seconds,
-    });
+    const seconds = this.state.seconds - 1;
+    this.setState({ seconds: seconds });
 
     // Check if we're at zero.
-    if (seconds == 0) {
-
-
+    if (seconds === -1) {
+      clearInterval(this.timer);
       alert("Game over.. Game is resetting..GO!");
 
-      //update data in server (axios patch request)
-      axios.patch('http://localhost:3000/updateUser', { name: this.props.user, score: this.state.score, accuracy: this.state.accuracy, WPM: 0 })
-      console.log('updated database')
-      // reset game
+      this.postHighscore();
+      
+      // clear timer
+      this.timer = 0;
 
-
-
-
+      // reset game      
       this.setState({
         code: ["Prepare Yourself"],
         textbox: [""],
         errors: 0,
-        time: {},
         seconds: 20,
         score: 0,
         accuracy: 0,
         length: 0,
-      })
-
-
+      });
     }
   }
 
@@ -178,23 +141,11 @@ class CodeBlock extends React.Component {
             <input type="text" onChange={this.handleChange} onKeyDown={this.startTimer} ref="userinput" />
         </label>
 
-        <div>
-          <Timer minutes={this.state.time.m} seconds={this.state.time.s} />
-        </div>
-
-        <div>
-          <Score score={this.state.score} />
-        </div>
-
-        <div>
-          <Accuracy accuracy={this.state.accuracy} />
-        </div>
-
-        <div id="errorbox">
-          <ErrorCount errors={this.state.errors} />
-        </div>
-
-
+        <Timer minutes="0" seconds={this.state.seconds} />
+        <Score score={this.state.score} />
+        <Accuracy accuracy={this.state.accuracy} />
+        <div id="errorbox"> <ErrorCount errors={this.state.errors} /> </div>
+      
       </div>
     )
   };

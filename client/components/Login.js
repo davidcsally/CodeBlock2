@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import Codeblock from './Codeblock.js'
+// import Codeblock from './Codeblock.js'
 import Register from './Register.js'
 
 class Login extends Component {
     constructor() {
         super();
         this.state = {
-            // username: '',
-            // password: '',
             checkMe: false 
         }
         this.handleCredentials = this.handleCredentials.bind(this);
