@@ -1,6 +1,5 @@
 const expect = require('expect');
 const mongoose = require('mongoose');
-// const sinon = require('sinon');
 const request = require('request');
 
 mongoose.Promise = global.Promise;
