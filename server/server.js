@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const UserController = require('../controllers/UserController');
+const cookieController = require('../controllers/cookieController');
+const sessionController = require('../controllers/sessionController');
 
 mongoose.Promise = global.Promise; // re-assign mongoose promises to ES6 to remove depricated message
 
@@ -62,7 +64,7 @@ app.post('/create', UserController.createUser, (req, res) => {
  * Returns: User data
  *
 */
-app.post('/login', UserController.getUser, (req, res) => {
+app.post('/login', UserController.getUser, cookieController.setSSIDCookie, sessionController.startSession, sessionController.isLoggedIn,  (req, res) => {
   res.send(res.locals);
 });
 
@@ -74,7 +76,7 @@ app.post('/login', UserController.getUser, (req, res) => {
  * Returns: Updated user information
  *
 */
-app.patch('/updateUser', UserController.updateUser, (req, res) => {
+app.patch('/updateUser', UserController.updateUser, sessionController.isLoggedIn, (req, res) => {
   res.send(res.locals);
 });
 
@@ -86,7 +88,7 @@ app.patch('/updateUser', UserController.updateUser, (req, res) => {
  * Returns: Array of user data, sorted by score
  *
 */
-app.get('/highscores', UserController.getTopUsers, (req, res) => {
+app.get('/highscores', UserController.getTopUsers, sessionController.isLoggedIn,  (req, res) => {
   res.send(res.locals);
 });
 
