@@ -1,50 +1,63 @@
 const User = require('../model/UserModel');
+const bcrypt = require('bcrypt');
+
+const saltRounds = 10;
 
 const UserController = {
   /** this is good */
   createUser(req, res, next) {
+    // ** Input Validation
+
     if (!req.body.hasOwnProperty('name')) return res.status(400).json('Must enter a username!');
     else if (!req.body.hasOwnProperty('password')) return res.status(400).json('Must enter a password!');
     else if (req.body.name === '') return res.status(400).json('Must enter a username!');
     else if (req.body.password === '') return res.status(400).json('Must enter a password!');
 
-    else {
-      const newUser = new User({
-        name: req.body.name,
-        password: req.body.password,
-        score: req.body.score,
-        WPM: req.body.WPM,
-        accuracy: req.body.accuracy,
-      });
+    // ** Input Validation was successful
+    bcrypt.genSalt(saltRounds, (err, salt) => {
+      bcrypt.hash(String(req.body.password), salt, (err2, hash) => {
+        if (err2) console.log(`ERROR: ${err2}`);
 
-      // don't add duplicates
-      User.findOne({ name: newUser.name }, (err, data) => {
-        if (err) throw err;
-        if (data === null) {
-          // save if user is new
-          newUser.save((error, newDoc) => {
-            if (error) throw error;
+        const newUser = new User({
+          name: req.body.name,
+          password: hash,
+          score: req.body.score,
+          WPM: req.body.WPM,
+          accuracy: req.body.accuracy,
+        });
 
-            res.locals = newDoc;
-            next();
-          });
-        } else res.status(400).json('ERROR: Duplicate User');
+        // don't add duplicates
+        User.findOne({ name: newUser.name }, (err, data) => {
+          if (err) throw err;
+          if (data === null) {
+            // save if user is new
+            newUser.save((error, newDoc) => {
+              if (error) throw error;
+
+              res.locals = newDoc;
+              next();
+            });
+          } else res.status(400).json('ERROR: Duplicate User');
+        });
       });
-    }
+    });
   },
 
   /** This is solid */
   getUser(req, res, next) {
-    User.findOne({ name: req.body.name }, (err, data) => {
+    const find = { name: req.body.name };
+    User.findOne(find, (err, data) => {
       if (err) return console.log(err);
+      if (data === null) return res.status(400).json('invalid');
 
       // check if password matches
-        // TODO BCrypt
-      if (req.body.password === data.password) {
-        res.locals = data;
-        res.status(200);
-        next();
-      } else res.status(400).json('INCORRECT PASSWORD!');
+      bcrypt.compare(req.body.password, data.password, (err, result) => {
+        if (result) {
+          res.locals = data;
+          res.status(200);
+          next();
+        } else res.status(400).json('INCORRECT PASSWORD!');
+      });
     });
   },
 
@@ -54,7 +67,6 @@ const UserController = {
       if (err) throw err;
       res.locals = data;
       next();
-      // res.send(data);
     }).limit(10).sort({ score: -1 });
   },
 

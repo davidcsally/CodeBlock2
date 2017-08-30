@@ -77,7 +77,7 @@ describe('Database interactions', () => {
     });
   });
 
-  it('does not allow empty strings', (done) => {
+  it('does not allow empty strings in username or password', (done) => {
     const options = {
       headers: {
         'Content-Type': 'application/json',
@@ -160,24 +160,16 @@ describe('Database interactions', () => {
   it('should return the top 10 high scores', (done) => {
 
     // write hella users to DB
-    let arr = [];
+    const arr = [];
     
     for (let i = 0; i < 15; i++) {
-      const newObj = { name: `David${i}`, score: i * 10, password: 1234 };
+      const newObj = { name: `David${i}`, score: (i * 10), password: 1234 };
       arr.push(newObj);
     }
 
     Model.create(arr, (err, docs) => {
       if (err) throw(err);
-
       // then test DB
-      const options = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: 'GET',
-      };
-
       request.get('http://localhost:3000/highscores', (err, res, body) => {
         const bod = JSON.parse(body);
 
