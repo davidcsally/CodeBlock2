@@ -42,8 +42,6 @@ class CodeBlock extends React.Component {
 
   handleAccuracy = () => {
     let accuracy = this.state.accuracy;
-    console.log(this.state.errors)
-    console.log(this.state.length)
 
     accuracy = 100 - Math.round((this.state.errors / this.state.length) * 100)
     this.setState({ accuracy: accuracy })
@@ -64,8 +62,29 @@ class CodeBlock extends React.Component {
 
     if (typedCode[0].length == 1) {
       this.refs.userinput.value = "";
-      this.startTimer();
-      this.setState({ code: codeProblems[i], textbox: [""] }, () => { i++ });
+      this.setState({ code: codeProblems[i], textbox: [""] }, () => {
+        i++
+
+        //if the player reaches the end..
+        if (i === codeProblems.length+1) {
+          alert("Good Job");
+
+          //update data in server (axios patch request)
+          axios.patch('http://localhost:3000/updateUser', { name: this.props.user, score: this.state.score, accuracy: this.state.accuracy, WPM: 0 })
+          console.log('updated database')
+          // reset game
+          this.setState({
+            code: ["Prepare Yourself"],
+            textbox: [""],
+            errors: 0,
+            time: {},
+            seconds: 20,
+            score: 0,
+            accuracy: 0,
+            length: 0,
+          })
+        }
+      });
       this.setState({ seconds: 20 })
     } else if (userInput == typedCode[0].charAt()) {
       let correct = typedCode[0].substring(1);
@@ -78,7 +97,7 @@ class CodeBlock extends React.Component {
       this.handleCorrectAnswer();
       this.setState({ code: typedCode, textbox: newTextbox });
     } else {
-      alert("YOU WRONG!!!");
+
       this.refs.userinput.value = "";
       this.handleError();
     };
@@ -124,14 +143,26 @@ class CodeBlock extends React.Component {
     if (seconds == 0) {
 
 
-      alert("Game over");
+      alert("Game over.. Game is resetting..GO!");
 
       //update data in server (axios patch request)
-      axios.patch('http://localhost:3000/updateUser', {name: "David", score: this.state.score, accuracy: this.state.accuracy, WPM: 0})
+      axios.patch('http://localhost:3000/updateUser', { name: this.props.user, score: this.state.score, accuracy: this.state.accuracy, WPM: 0 })
       console.log('updated database')
       // reset game
 
-      clearInterval(this.timer);
+
+
+
+      this.setState({
+        code: ["Prepare Yourself"],
+        textbox: [""],
+        errors: 0,
+        time: {},
+        seconds: 20,
+        score: 0,
+        accuracy: 0,
+        length: 0,
+      })
 
 
     }
