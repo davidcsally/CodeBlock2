@@ -35,22 +35,26 @@ class Register extends Component {
       });
   }
 
+  onEnterPress(e) {
+    e.preventDefault();
+    if (e.key === 'Enter') {
+      this.handleRegister();
+    }
+  }
+
   render() {
     return (
       <div className="register">
-        <blockquote>
-          <p>Register</p>
-        </blockquote>
-        <div>
-          <label>Username:</label>
-          <input type="text" id="username" ref={this.state.password} onSubmit={this.updateUser} />
-          <br />
-          <label>Password:</label>
-          <input type="text" id="password" ref={this.state.password} onSubmit={this.updateUser} />
+        <h1> REGISTER </h1>
+        <div className="register-box">
+
+        <form onKeyUp={(event) => { this.onEnterPress(event); }}>
+          <input placeholder="username" type="text" id="username" ref={this.state.password} onSubmit={this.updateUser} />
+          <input placeholder="password" type="password" id="password" ref={this.state.password} onSubmit={this.updateUser} />
+        </form>
+          <a onClick={() => {this.props.buttonClick('login'); }} ><p>Have an account? Log in</p></a>
         </div>
-        <text>Or Login</text>
-        <button name="login" onClick={this.props.buttonClick}>Log In</button>
-        <button name="register" onClick={this.handleRegister}>Register</button>
+
       </div>
     );
   }

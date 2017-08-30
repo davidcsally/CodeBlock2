@@ -1,33 +1,98 @@
-// Login
-.login {
-  border: 1px solid black;
-  margin: auto;
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+html, body {
+  height: 100%;
+}
+
+body {
+  align-items: center;
+}
+
+.content {
+  margin: 0 auto;
   padding: auto;
-  align-content: center;
+}
+
+// Login
+.login, .register {
+  width: 360px;
+  padding: 3% 0 0;
+  margin: auto;
   text-align: center;
+}
+
+.login-box, .register-box {
+  position: relative;
+  z-index: 1;
+  background: #FFFFFF;
+  max-width: 360px;
+  margin: 0 auto 100px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.login input, .register input {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.login button, .register button {
+  margin-left: 5px;
+  margin-right: 5px;
+  font-family: "Roboto", sans-serif;  
+}
+
+.login p, .register p {
+  color: blue;
 }
 
 // code-block
 .code-block {
+  font-family: press_start_2pregular, Courier New, Courier, monospace;  
   align-content: center;
   text-align: center;
+  background: black;
+  color: #00D816
 }
 
-.register {
-  align-content: center;
-  text-align: center;
+.code-block p {
+  font-size: 50px;
 }
 
+// LEADERBOARD
 .leaderboard {
   background: black;
   font-family: press_start_2pregular, Courier New, Courier, monospace;
   font-weight: 900;
+  font-size: 26 ;
   color: #BFBF1D;
   border: 1px solid black;
 }
 
 .ranking:hover {
-  background: #B1D7DE;
+  color:red;
+}
+
+.gameover {
+  padding: 3% 0 0;
+  margin: auto;
+
+  align-content: center;
+  text-align: center;
+  height: 50%;
+  width: 50%;
+
+  font-family: press_start_2pregular, Courier New, Courier, monospace;
+  
+  border: 1px solid black;
 }
 
 span {
@@ -35,8 +100,7 @@ span {
 }
 
 p {
-  color: blue;
-  font-size: 45px;
+  font-size: 24px;
 }
 
 #error {
@@ -58,9 +122,5 @@ p {
   padding: auto;
   text-align: center;
   width: 140px;
+  font-family: Courier New, Courier, monospace;  
 }
-
-h1 {
-  border: 1px solid black;  
-}
-

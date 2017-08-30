@@ -6,17 +6,18 @@ import Timer from './Timer'
 import Leaderboard from './Leaderboard'
 import axios from 'axios'
 
-let i = 0;
 const NUM_SECONDS = 5;
-const codeProblems = [["You ain't ready"],
-                      ["for (let i = 0; i < array.length; i++)"],
-                      ['s = s.match(/\S+/g);'],
-                      ['var repl = str.replace(/^\s+|\s+$|\s+(?=\s)/g, " ")']];
 
 class CodeBlock extends Component {
   constructor() {
     super();
     this.state = {
+      codeProblems: [["Prepare Yourself"],
+      ["You ain't ready"],
+      ["for (let i = 0; i < array.length; i++)"],
+      ['s = s.match(/\S+/g);'],
+      ['var repl = str.replace(/^\s+|\s+$|\s+(?=\s)/g, " ")']
+    ],
       code: ["Prepare Yourself"],
       textbox: [""],
       errors: 0,
@@ -24,8 +25,10 @@ class CodeBlock extends Component {
       score: 0,
       accuracy: 0,
       length: 0,
+      index: 0,
     };
-    this.timer = 0;
+    this.timer = 0;    
+    this.startTimer = this.startTimer.bind(this);    
     this.countDown = this.countDown.bind(this);
   }
 
@@ -38,38 +41,51 @@ class CodeBlock extends Component {
     let userInput = this.refs.userinput.value;
     let newTextbox = this.state.textbox;
 
-    if (typedCode[0].length == 1) {
+    if (typedCode[0].length === 1) {
       this.refs.userinput.value = "";
-      this.setState({ code: codeProblems[i], textbox: [""] }, () => {
-        i++
+
+      // TODO check if end was reached
+      let newCode = this.state.codeProblems[this.state.index+1];
+      this.setState({
+        index: this.state.index + 1,
+        code: newCode,
+        textbox: [""]
+      }, () => {
 
         //if the player reaches the end..
-        if (i === codeProblems.length+1) {
+        if (this.state.index === this.state.codeProblems.length) {
+          console.log('good job');
+          
           alert("Good Job");
-
           //update data in server (axios patch request)
-          axios.patch('http://localhost:3000/updateUser', { name: this.props.user, score: this.state.score, accuracy: this.state.accuracy, WPM: 0 })
+          axios.patch('http://localhost:3000/updateUser', { name: this.props.user, score: this.state.score, accuracy: this.state.accuracy, WPM: 0 });
           console.log('updated database')
           
           // reset game
+
+          let newProblem = this.state.codeProblems[0];
+
           this.setState({
-            code: ["Prepare Yourself"],
+            code: newProblem,
             textbox: [""],
             errors: 0,
             seconds: 20,
             score: 0,
             accuracy: 0,
             length: 0,
-          })
+          });
         }
       });
-      this.setState({ seconds: 20 })
-    } else if (userInput == typedCode[0].charAt()) {
+      this.setState({ seconds: NUM_SECONDS })
+    }
+    
+    else if (userInput == typedCode[0].charAt()) {
       let correct = typedCode[0].substring(1);
       typedCode.shift();
       typedCode.push(correct);
       newTextbox.push(userInput);
       this.refs.userinput.value = "";
+
       this.setState({
         code: typedCode,
         textbox: newTextbox,
@@ -77,16 +93,20 @@ class CodeBlock extends Component {
         length: this.state.length + 1,
         accuracy: 100 - Math.round((this.state.errors / this.state.length) * 100),
       });
-    } else {
+    }
+    
+    else {
       this.refs.userinput.value = "";
       this.handleError();
     };
   };
 
   /** Start the countdown timer */
-  startTimer = () => {
+  startTimer() {
     if (this.timer == 0) {
       this.timer = setInterval(this.countDown, 1000);
+      // var self = this;
+      // this.timer = setInterval(self.countDown, 1000);
     }
   }
 
@@ -98,8 +118,6 @@ class CodeBlock extends Component {
       accuracy: this.state.accuracy,
       WPM: 0,
     }
-
-    // POST new score
     axios.patch('http://localhost:3000/updateUser', newData);
   }
 
@@ -107,38 +125,33 @@ class CodeBlock extends Component {
   countDown() {
     // Remove one second, set state so a re-render happens.
     const seconds = this.state.seconds - 1;
-    this.setState({ seconds: seconds });
+    if (seconds != -1) this.setState({ seconds: seconds });
 
     // Check if we're at zero.
-    if (seconds === -1) {
+    else if (seconds === -1) {
       clearInterval(this.timer);
-      alert("Game over.. Game is resetting..GO!");
-
+      
       this.postHighscore();
       
       // clear timer
       this.timer = 0;
-
-      // reset game      
-      this.setState({
-        code: ["Prepared Yourself"],
-        textbox: [""],
-        errors: 0,
-        seconds: 20,
-        score: 0,
-        accuracy: 0,
-        length: 0,
-      });
+      this.refs.userinput.value = "";
+      
+      // reset game
+      console.log('*******')
+      console.log('RESET');
+      console.log('********')
+      this.props.refreshView('gameover');
     }
   }
 
   render() {
+    // console.log('this.state.code: ', this.state.code);
     return (
       <div className="code-block">
         <p><span id="correct">{this.state.textbox}</span>{this.state.code}</p>
 
         <label id="input">
-          User Input:
             <input type="text" onChange={this.handleChange} onKeyDown={this.startTimer} ref="userinput" />
         </label>
 
@@ -146,9 +159,7 @@ class CodeBlock extends Component {
         <Score score={this.state.score} />
         <Accuracy accuracy={this.state.accuracy} />
         <div id="errorbox"> <ErrorCount errors={this.state.errors} /> </div>
-        <div>
-          <Leaderboard />
-        </div>
+        <div> <Leaderboard /> </div>
 
       </div>
     )
