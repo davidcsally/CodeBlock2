@@ -33,7 +33,7 @@ class Leaderboard extends Component {
             return <Ranking name={ranking.name} score={ranking.score} accuracy={ranking.accuracy} key={index}/>
         })
         return (
-            <div>
+            <div className="leaderboard">
                 Leaderboards
                 {rankingList}
           </div>

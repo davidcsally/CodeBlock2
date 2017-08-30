@@ -134,7 +134,7 @@ class CodeBlock extends Component {
 
   render() {
     return (
-      <div>
+      <div className="code-block">
         <p><span id="correct">{this.state.textbox}</span>{this.state.code}</p>
 
         <label id="input">
