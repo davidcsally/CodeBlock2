@@ -8,13 +8,21 @@ mongoose.Promise = global.Promise;
 const PORT = 3000;
 const app = express();
 
+// init gamesList to json file
+let uri;
+if (process.env.NODE_ENV === 'test') {
+  uri = 'mongodb://localhost/user';
+} else {
+  uri = 'mongodb://user:password@ds163053.mlab.com:63053/codeblock';
+}
+
 // Connect to MongooseDB
-const db = mongoose.connection.openUri('mongodb://user:password@ds163053.mlab.com:63053/codeblock');
+const db = mongoose.connection.openUri(uri);
 db.on('error', () => {
   console.log('ERROR connecting to database');
 });
 db.once('open', () => {
-  console.log('Sucessfully connected to database');
+  console.log(`Sucessfully connected to database ${uri}`);
 });
 
 app.use(
