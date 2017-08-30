@@ -4,12 +4,13 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const UserController = require('../controllers/UserController');
 
-mongoose.Promise = global.Promise;
+mongoose.Promise = global.Promise; // re-assign mongoose promises to ES6 to remove depricated message
+
 const PORT = 3000;
 const app = express();
-
-// init gamesList to json file
 let uri;
+
+// Select between TEST and REAL databases
 if (process.env.NODE_ENV === 'test') {
   uri = 'mongodb://localhost/user';
 } else {
@@ -25,6 +26,7 @@ db.once('open', () => {
   console.log(`Sucessfully connected to database ${uri}`);
 });
 
+// Use middleware
 app.use(
   bodyParser.urlencoded({ extended: true }),
   bodyParser.json(),
@@ -38,39 +40,67 @@ app.use(
   express.static('./'),
 );
 
+// ROUTES
 
-// ROUTERS
-
-/** Create User */
+/** Create User
+ *
+ * This route will create a new user in the DB
+ *
+ * Expects: res.body to be {name: string, password: string}
+ * Returns: New user data
+ *
+*/
 app.post('/create', UserController.createUser, (req, res) => {
   res.send(res.locals);
 });
 
-/** Log in */
+/** Log in
+ *
+ * Verify login credentials against database
+ *
+ * Expects: res.body to be { name: string, password: string }
+ * Returns: User data
+ *
+*/
 app.post('/login', UserController.getUser, (req, res) => {
   res.send(res.locals);
 });
 
-/** Update User */
+/** Update User
+ *
+ * Update's a user's information
+ *
+ * Expects: res.body to be: { name: string, score: int, wpm: int, accuracy: int }
+ * Returns: Updated user information
+ *
+*/
 app.patch('/updateUser', UserController.updateUser, (req, res) => {
   res.send(res.locals);
 });
 
-/** Get highscores */
+/** Get highscores
+ *
+ * Gets a list of the 10 highest scores, sorted from high to low
+ *
+ * Expects: just a get request
+ * Returns: Array of user data, sorted by score
+ *
+*/
 app.get('/highscores', UserController.getTopUsers, (req, res) => {
-  // console.log('sending highscores');
-  // console.log(res.locals);
   res.send(res.locals);
 });
 
-/** Serve Index */
+/** Serve Index
+ *
+ * Default route, will serve the App
+ *
+*/
 app.get('/', (req, res) => {
   res.render('index.html');
   res.end();
 });
 
-
-// SERVER RUNNING
+/** Start the server */
 app.listen(3000, () => {
   console.log(`CodeBlock is listening at: ${PORT}`);
 });
