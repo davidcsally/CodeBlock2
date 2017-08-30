@@ -28,11 +28,11 @@ const UserController = {
 
         // don't add duplicates
         User.findOne({ name: newUser.name }, (err, data) => {
-          if (err) throw err;
+          if (err) return console.log(err);
           if (data === null) {
             // save if user is new
             newUser.save((error, newDoc) => {
-              if (error) throw error;
+              if (error) return console.log(error);
 
               res.locals = newDoc;
               next();
@@ -64,7 +64,7 @@ const UserController = {
   /** this is working */
   getTopUsers(req, res, next) {
     User.find({}, (err, data) => {
-      if (err) throw err;
+      if (err) return console.log(err);
       res.locals = data;
       next();
     })
@@ -80,15 +80,22 @@ const UserController = {
       accuracy: req.body.accuracy,
     };
 
-    User.findOneAndUpdate(
-      { name: req.body.name },
-      { $set: newData },
-      { new: true },  // this is REQUIRED to send back updated data
-      (err, data) => {
-        if (err) throw err;
-        res.locals = data;
-        next();
-      });
+    User.find({ name: req.body.name }, (err, data) => {
+      if (err) return console.log(err);
+      if (data[0].score >= req.body.score) { next(); }
+      else {
+        console.log('updating data...');
+        User.findOneAndUpdate(
+          { name: req.body.name },
+          { $set: newData },
+          { new: true },  // this is REQUIRED to send back updated data
+          (err, data) => {
+            if (err) return console.log(err);
+            res.locals = data;
+            next();
+          });
+      }
+    });
   },
 };
 

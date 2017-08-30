@@ -67,8 +67,14 @@ body {
   font-size: 50px;
 }
 
+// TIMER
+.clock p {
+  color: red;
+}
+
 // LEADERBOARD
 .leaderboard {
+  padding-top: 10%;
   background: black;
   font-family: press_start_2pregular, Courier New, Courier, monospace;
   font-weight: 900;
