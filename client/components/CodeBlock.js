@@ -149,6 +149,7 @@ class CodeBlock extends Component {
     // console.log('this.state.code: ', this.state.code);
     return (
       <div className="code-block">
+      <div className="header"><h1>typeof</h1></div>
         <p><span id="correct">{this.state.textbox}</span>{this.state.code}</p>
 
         <label id="input">

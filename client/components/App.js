@@ -41,11 +41,11 @@ class App extends Component {
     console.log('APP View: ', this.state.view);
     // console.log('checkme: ', this.state.checkMe);
     if (this.state.view === 'login') {
-      needsToRender = <Login  buttonClick={this.changeView} loginTrue={this.changeGame} getBack={this.sendPartialInfo} />;
+      needsToRender = <Login  buttonClick={this.changeView} getBack={this.sendPartialInfo} />;
     }
 
     else if (this.state.view === 'register') {
-      needsToRender = <Register refreshView={this.refreshView} buttonClick={this.changeView} />;
+      needsToRender = <Register refreshView={this.refreshView} buttonClick={this.changeView} getBack={this.sendPartialInfo} />;
     }
 
     else if (this.state.view === 'game') {
