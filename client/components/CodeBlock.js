@@ -6,7 +6,7 @@ import Timer from './Timer'
 import Leaderboard from './Leaderboard'
 import axios from 'axios'
 
-const NUM_SECONDS = 5;
+const NUM_SECONDS = 10;
 
 class CodeBlock extends Component {
   constructor() {
@@ -149,7 +149,8 @@ class CodeBlock extends Component {
     // console.log('this.state.code: ', this.state.code);
     return (
       <div className="code-block">
-        <p><span id="correct">{this.state.textbox}</span>{this.state.code}</p>
+      <div className="header"><h1>typeof</h1></div>
+        <p className="code-problem"><span id="correct">{this.state.textbox}</span>{this.state.code}</p>
 
         <label id="input">
             <input type="text" onChange={this.handleChange} onKeyDown={this.startTimer} ref="userinput" />

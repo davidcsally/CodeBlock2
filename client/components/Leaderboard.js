@@ -13,7 +13,6 @@ class Leaderboard extends Component {
 
 
     loadhighscores = () => {
-
         axios.get('/highscores').then((data) => {
             this.setState({ top10: data.data})
             console.log(this.state.top10)
@@ -22,7 +21,6 @@ class Leaderboard extends Component {
     }
 
     componentDidMount = () => {
-
         this.loadhighscores()
     }
 
@@ -34,7 +32,7 @@ class Leaderboard extends Component {
         })
         return (
             <div className="leaderboard">
-                Leaderboards
+                <h2> Leaderboards </h2>
                 {rankingList}
           </div>
         );

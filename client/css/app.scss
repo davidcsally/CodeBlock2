@@ -44,14 +44,49 @@ body {
   font-size: 14px;
 }
 
+.login input:hover, .register input:hover {
+  background-color: #DEDEDE;
+}
+
+.login input:hover::-webkit-input-placeholder{color:black}
+.register input:hover::-webkit-input-placeholder{color:black}
+
 .login button, .register button {
-  margin-left: 5px;
-  margin-right: 5px;
-  font-family: "Roboto", sans-serif;  
+  width: 100%;
+  font-family: "Roboto", sans-serif;
+  margin-bottom: 10px;
+}
+
+.login form, .register form {
+  margin: auto;
+} 
+
+.btn-primary:hover {
+  background-color: #0069d9;
+  border-color: #0069d9;
+  cursor: pointer;    
+}
+
+.link {
+  color: blue;
+}
+
+.link:hover {
+  text-decoration: underline;
+  cursor: pointer;  
 }
 
 .login p, .register p {
-  color: blue;
+  color: black;
+  font-size: 15px;
+}
+
+.login p:hover {
+  cursor: default;    
+}
+
+.register p:hover {
+  cursor: default;    
 }
 
 // code-block
@@ -81,6 +116,11 @@ body {
   font-size: 26 ;
   color: #BFBF1D;
   border: 1px solid black;
+}
+
+.leaderboard h2 {
+  color: #4E1A7A;
+  padding-bottom: 5%;
 }
 
 .ranking:hover {
@@ -122,11 +162,36 @@ p {
   padding-top: 10px;
 }
 
-#header {
+h1 {
   color: red;
   margin: 0 auto;
   padding: auto;
   text-align: center;
   width: 140px;
-  font-family: Courier New, Courier, monospace;  
+  font-family: Courier New, Courier, monospace; 
+  
+  padding-bottom: 30px;
+}
+
+.code-problem {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {  
+  50% { opacity: 0; }
+}
+
+.clock {
+  animation: timerBlink 0.1s linear infinite;
+}
+
+@keyframes timerBlink {  
+  50% { 
+    opacity: 0;
+    color: orange; 
+  }
+}
+
+h5 {
+  padding-bottom: 10px;
 }

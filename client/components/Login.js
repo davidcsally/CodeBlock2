@@ -12,11 +12,13 @@ class Login extends Component {
     .then((response) => {
       if (response.data !== null) {
         const username = response.data.name;
+        console.log('logging in...');
         this.props.getBack(username, 'game');
       }
     })
     .catch((err) => {
       console.log(err);
+      alert('Invalid Login!');
     });
   }
 
@@ -31,8 +33,11 @@ class Login extends Component {
     return (
       // Always set to HTML Logic
       <div className="login">
-        <h1> LOG IN </h1>
+        <div className="header"><h1>typeof</h1></div>
+    
         <div className="login-box">
+        <h5> Log In </h5>
+
           <form onKeyUp={(event) => { this.onEnterPress(event); }}>
             <input
               type="text"
@@ -44,10 +49,9 @@ class Login extends Component {
               type="password"
               id="password"
             />
-
           </form>
-
-          <a onClick={() => {this.props.buttonClick('register'); }} ><p>Don't have an account? Sign up</p></a>          
+          <button onClick={this.handleCredentials} className="btn-primary btn-lg " > Log In </button>
+          <p>Don't have an account? <a onClick={() => {this.props.buttonClick('register'); }} ><span className="link">Sign Up</span></a></p>
         </div>
       </div>
     );

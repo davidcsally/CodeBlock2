@@ -16,7 +16,6 @@ const server = require('./../server/server.js'); // our server file, starts the 
 // Initially connect to DB
 /** Before the test runs, connect to  clear the database and add an inital entry */
 before((done) => {
-
   // drops the database
   Model.remove({}, (err) => {
     if (err) console.log(`Error: ${err}`);
@@ -39,6 +38,7 @@ before((done) => {
       });
     }
   });
+});
 
 describe('Database interactions', () => {
   it('saves a new user to the database  with a status code 200', (done) => {
@@ -57,7 +57,6 @@ describe('Database interactions', () => {
       done();
     });
   });
-});
 
   it('does not save empty users to the database', (done) => {
 
@@ -139,7 +138,7 @@ describe('Database interactions', () => {
   });
 
   it('updates a user\'s highscore', (done) => {
-    const obj = { name: 'Dave', score: 0, WPM: 50, accuracy: 100 };
+    const obj = { name: 'Dave', score: 10000, WPM: 50, accuracy: 100 };
     const options = {
       headers: {
         'Content-Type': 'application/json',

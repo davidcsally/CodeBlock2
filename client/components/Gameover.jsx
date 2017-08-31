@@ -4,7 +4,7 @@ class GameOver extends Component {
   render() {
     return (
       <div className="gameover">
-        <h1>GAME OVER</h1>
+        <h2>GAME OVER</h2>
         <button
           className="btn btn-primary"
           onClick={ () => {this.props.refreshView('game') }}
