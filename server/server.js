@@ -52,7 +52,7 @@ app.use(
  * Returns: New user data
  *
 */
-app.post('/create', UserController.createUser, (req, res) => {
+app.post('/create', userController.createUser, (req, res) => {
   res.send(res.locals);
 });
 
@@ -64,7 +64,7 @@ app.post('/create', UserController.createUser, (req, res) => {
  * Returns: User data
  *
 */
-app.post('/login', UserController.getUser, cookieController.setSSIDCookie, sessionController.startSession, sessionController.isLoggedIn, (req, res) => {
+app.post('/login', userController.getUser, cookieController.setSSIDCookie, sessionController.startSession, sessionController.isLoggedIn, (req, res) => {
   res.send(res.locals);
 });
 
@@ -76,7 +76,7 @@ app.post('/login', UserController.getUser, cookieController.setSSIDCookie, sessi
  * Returns: Updated user information
  *
 */
-app.patch('/updateUser', UserController.updateUser, sessionController.isLoggedIn, (req, res) => {
+app.patch('/updateUser', userController.updateUser, sessionController.isLoggedIn, (req, res) => {
   res.send(res.locals);
 });
 
@@ -88,7 +88,7 @@ app.patch('/updateUser', UserController.updateUser, sessionController.isLoggedIn
  * Returns: Array of user data, sorted by score
  *
 */
-app.get('/highscores', UserController.getTopUsers, sessionController.isLoggedIn, (req, res) => {
+app.get('/highscores', userController.getTopUsers, sessionController.isLoggedIn, (req, res) => {
   res.send(res.locals);
 });
 
