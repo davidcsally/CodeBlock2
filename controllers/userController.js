@@ -68,8 +68,8 @@ const UserController = {
       res.locals = data;
       next();
     })
-    .limit(10)
-    .sort({ score: -1 }); // this sorts in ascending and sends back 10
+      .limit(10)
+      .sort({ score: -1 }); // this sorts in ascending and sends back 10
   },
 
   /** 👌🏻 Good shit */

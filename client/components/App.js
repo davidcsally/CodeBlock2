@@ -24,7 +24,7 @@ class App extends Component {
     // this.setState({ view: !this.state.view });
   }
   // Change View from Login to Game (only sets this.state.checkMe to true)
-  changeGame (event) {
+  changeGame(event) {
     this.setState({ checkMe: !this.state.checkMe });
   }
   // Supposed to retain username from the Login.js
@@ -41,7 +41,7 @@ class App extends Component {
     console.log('APP View: ', this.state.view);
     // console.log('checkme: ', this.state.checkMe);
     if (this.state.view === 'login') {
-      needsToRender = <Login  buttonClick={this.changeView} getBack={this.sendPartialInfo} />;
+      needsToRender = <Login buttonClick={this.changeView} getBack={this.sendPartialInfo} />;
     }
 
     else if (this.state.view === 'register') {
@@ -57,7 +57,7 @@ class App extends Component {
     }
 
     else {
-      needsToRender = <Login  buttonClick={this.changeView} loginTrue={this.changeGame} getBack={this.sendPartialInfo} />;
+      needsToRender = <Login buttonClick={this.changeView} loginTrue={this.changeGame} getBack={this.sendPartialInfo} />;
     }
 
     // The app's view

@@ -7,7 +7,7 @@ class GameOver extends Component {
         <h2>GAME OVER</h2>
         <button
           className="btn btn-primary"
-          onClick={ () => {this.props.refreshView('game') }}
+          onClick={() => { this.props.refreshView('game') }}
         > Retry </button>
       </div>
     );
