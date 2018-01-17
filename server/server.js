@@ -1,7 +1,7 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const mongoose = require('mongoose');
 const UserController = require('../controllers/UserController');
 const cookieController = require('../controllers/cookieController');
 const sessionController = require('../controllers/sessionController');
@@ -64,7 +64,7 @@ app.post('/create', UserController.createUser, (req, res) => {
  * Returns: User data
  *
 */
-app.post('/login', UserController.getUser, cookieController.setSSIDCookie, sessionController.startSession, sessionController.isLoggedIn,  (req, res) => {
+app.post('/login', UserController.getUser, cookieController.setSSIDCookie, sessionController.startSession, sessionController.isLoggedIn, (req, res) => {
   res.send(res.locals);
 });
 
@@ -88,7 +88,7 @@ app.patch('/updateUser', UserController.updateUser, sessionController.isLoggedIn
  * Returns: Array of user data, sorted by score
  *
 */
-app.get('/highscores', UserController.getTopUsers, sessionController.isLoggedIn,  (req, res) => {
+app.get('/highscores', UserController.getTopUsers, sessionController.isLoggedIn, (req, res) => {
   res.send(res.locals);
 });
 
