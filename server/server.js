@@ -9,7 +9,7 @@ const sessionController = require('../controllers/sessionController');
 
 mongoose.Promise = global.Promise; // re-assign mongoose promises to ES6 to remove depricated message
 
-const PORT = process.env.PORT || 3111;
+const port = process.env.PORT || 3111;
 const app = express();
 let uri;
 
@@ -97,6 +97,6 @@ app.get('/', (req, res) => {
 });
 
 /** Start the server */
-app.listen(3000, () => {
-  console.log(`CodeBlock is listening at: ${PORT}`);
+app.listen(port, () => {
+  console.log(`CodeBlock is listening at: ${port}`);
 });
