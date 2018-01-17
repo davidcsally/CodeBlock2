@@ -9,7 +9,7 @@ const sessionController = require('../controllers/sessionController');
 
 mongoose.Promise = global.Promise; // re-assign mongoose promises to ES6 to remove depricated message
 
-const port = process.env.PORT || 3111;
+const port = process.env.PORT || 3000;
 const app = express();
 let uri;
 
