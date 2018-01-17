@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -13,20 +14,13 @@ const app = express();
 let uri;
 
 // Select between TEST and REAL databases
-if (process.env.NODE_ENV === 'test') {
-  uri = 'mongodb://localhost/user';
-} else {
-  uri = 'mongodb://user:password@ds163053.mlab.com:63053/codeblock';
-}
+if (process.env.NODE_ENV === 'test') uri = 'mongodb://localhost/user';
+else uri = 'mongodb://user:password@ds163053.mlab.com:63053/codeblock';
 
 // Connect to MongooseDB
 const db = mongoose.connection.openUri(uri);
-db.on('error', () => {
-  console.log('ERROR connecting to database');
-});
-db.once('open', () => {
-  console.log(`Sucessfully connected to database ${uri}`);
-});
+db.on('error', () => console.log('ERROR connecting to database'));
+db.once('open', () => console.log(`Sucessfully connected to database ${uri}`));
 
 // Use middleware
 app.use(
@@ -39,7 +33,7 @@ app.use(
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PATCH, DELETE');
     next();
   },
-  express.static('./'),
+  express.static(path.join(__dirname, '../client')),
 );
 
 // ROUTES
