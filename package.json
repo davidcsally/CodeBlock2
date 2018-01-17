@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/server.js",
-    "postinstall": "node node_modules/webpack/bin/webpack.js -p",
+    "postinstall": "heroku config:set NODE_ENV=production heroku config:set NPM_CONFIG_PRODUCTION=true webpack -p --config ./webpack.config.js --progress",
     "build": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "pack": "node node_modules/webpack/bin/webpack.js -w",
     "server": "node server/server.js",
