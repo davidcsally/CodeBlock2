@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/server.js",
-    "postinstall": "export NODE_ENV=production && NPM_CONFIG_PRODUCTION=true && webpack -p --config ./webpack.config.js --progress",
+    "postinstall": "./node_modules/webpack/bin/webpack.js -p --progress",
     "build": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "pack": "node node_modules/webpack/bin/webpack.js -w",
     "server": "node server/server.js",
