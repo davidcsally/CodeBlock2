@@ -1,32 +1,26 @@
+const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const UserController = require('../controllers/UserController');
+const userController = require('../controllers/userController');
 const cookieController = require('../controllers/cookieController');
 const sessionController = require('../controllers/sessionController');
 
 mongoose.Promise = global.Promise; // re-assign mongoose promises to ES6 to remove depricated message
 
-const PORT = 3000;
+const port = process.env.PORT || 3111;
 const app = express();
 let uri;
 
 // Select between TEST and REAL databases
-if (process.env.NODE_ENV === 'test') {
-  uri = 'mongodb://localhost/user';
-} else {
-  uri = 'mongodb://user:password@ds163053.mlab.com:63053/codeblock';
-}
+if (process.env.NODE_ENV === 'test') uri = 'mongodb://localhost/user';
+else uri = 'mongodb://user:password@ds163053.mlab.com:63053/codeblock';
 
 // Connect to MongooseDB
 const db = mongoose.connection.openUri(uri);
-db.on('error', () => {
-  console.log('ERROR connecting to database');
-});
-db.once('open', () => {
-  console.log(`Sucessfully connected to database ${uri}`);
-});
+db.on('error', () => console.log('ERROR connecting to database'));
+db.once('open', () => console.log(`Sucessfully connected to database ${uri}`));
 
 // Use middleware
 app.use(
@@ -39,7 +33,7 @@ app.use(
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PATCH, DELETE');
     next();
   },
-  express.static('./'),
+  express.static(path.join(__dirname, '../')),
 );
 
 // ROUTES
@@ -52,7 +46,7 @@ app.use(
  * Returns: New user data
  *
 */
-app.post('/create', UserController.createUser, (req, res) => {
+app.post('/create', userController.createUser, (req, res) => {
   res.send(res.locals);
 });
 
@@ -64,7 +58,7 @@ app.post('/create', UserController.createUser, (req, res) => {
  * Returns: User data
  *
 */
-app.post('/login', UserController.getUser, cookieController.setSSIDCookie, sessionController.startSession, sessionController.isLoggedIn, (req, res) => {
+app.post('/login', userController.getUser, cookieController.setSSIDCookie, sessionController.startSession, sessionController.isLoggedIn, (req, res) => {
   res.send(res.locals);
 });
 
@@ -76,7 +70,7 @@ app.post('/login', UserController.getUser, cookieController.setSSIDCookie, sessi
  * Returns: Updated user information
  *
 */
-app.patch('/updateUser', UserController.updateUser, sessionController.isLoggedIn, (req, res) => {
+app.patch('/updateUser', userController.updateUser, sessionController.isLoggedIn, (req, res) => {
   res.send(res.locals);
 });
 
@@ -88,7 +82,7 @@ app.patch('/updateUser', UserController.updateUser, sessionController.isLoggedIn
  * Returns: Array of user data, sorted by score
  *
 */
-app.get('/highscores', UserController.getTopUsers, sessionController.isLoggedIn, (req, res) => {
+app.get('/highscores', userController.getTopUsers, sessionController.isLoggedIn, (req, res) => {
   res.send(res.locals);
 });
 
@@ -103,6 +97,6 @@ app.get('/', (req, res) => {
 });
 
 /** Start the server */
-app.listen(3000, () => {
-  console.log(`CodeBlock is listening at: ${PORT}`);
+app.listen(port, () => {
+  console.log(`CodeBlock is listening at: ${port}`);
 });
