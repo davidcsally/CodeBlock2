@@ -33,7 +33,7 @@ app.use(
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PATCH, DELETE');
     next();
   },
-  express.static(path.join(__dirname, '../client')),
+  express.static(path.join(__dirname, '../')),
 );
 
 // ROUTES
