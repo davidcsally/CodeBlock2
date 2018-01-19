@@ -1,60 +1,67 @@
-import React, { Component } from 'react';
+import React from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
-class Login extends Component {
-  constructor() {
-    super();
-    this.handleCredentials = this.handleCredentials.bind(this);
-  }
+/** Check login credentials, on success log user in */
+const handleCredentials = sendPartialInfo =>
+  () => {
+    const name = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-  handleCredentials() {
-    axios.post('/login', { name: document.getElementById('username').value, password: document.getElementById('password').value })
-      .then((response) => {
-        if (response.data !== null) {
-          const username = response.data.name;
-          this.props.getBack(username, 'game');
+    axios.post('/login', { name, password })
+      .then((res) => {
+        if (res.data !== null) {
+          const username = res.data.name;
+          sendPartialInfo(username, 'game');
         }
       })
-      .catch((err) => {
-        console.log(err);
-        alert('Invalid Login!');
-      });
-  }
+      .catch(err => console.log('Invalid Login', err));
+  };
 
-  onEnterPress(e) {
+/** Button handler for pressing enter on <form> */
+const onEnterPress = sendPartialInfo =>
+  (e) => {
     e.preventDefault();
-    if (e.key === 'Enter') {
-      this.handleCredentials();
-    }
-  }
+    if (e.key === 'Enter') handleCredentials(sendPartialInfo)();
+  };
 
-  render() {
-    return (
-      // Always set to HTML Logic
-      <div className="login">
-        <div className="header"><h1>typeof</h1></div>
+// used in App.js
+const Login = ({ onClick, sendPartialInfo }) => {
+  const handleLogin = handleCredentials(sendPartialInfo);
+  const onPress = onEnterPress(sendPartialInfo);
 
-        <div className="login-box">
-          <h5> Log In </h5>
-
-          <form onKeyUp={(event) => { this.onEnterPress(event); }}>
-            <input
-              type="text"
-              id="username"
-              placeholder="username"
-            />
-            <input
-              placeholder="password"
-              type="password"
-              id="password"
-            />
-          </form>
-          <button onClick={this.handleCredentials} className="btn-primary btn-lg " > Log In </button>
-          <p>Don't have an account? <a onClick={this.props.buttonClick} ><span className="link">Sign Up</span></a></p>
+  return (
+    <div className="login">
+      <div className="header">
+        <h1>typeof</h1>
+      </div>
+      <div className="login-box">
+        <h5> Log In </h5>
+        <form onKeyUp={onPress}>
+          <input
+            type="text"
+            id="username"
+            placeholder="username"
+          />
+          <input
+            placeholder="password"
+            type="password"
+            id="password"
+          />
+        </form>
+        <button onClick={handleLogin} className="btn-primary btn-lg large-btn" > Log In </button>
+        <div className="login-text-container">
+          <p>Don{'\''}t have an account?</p>
+          <button className="small-btn" onClick={onClick} >Sign Up</button>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+Login.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  sendPartialInfo: PropTypes.func.isRequired,
+};
 
 export default Login;

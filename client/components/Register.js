@@ -1,79 +1,82 @@
-import React, { Component } from 'react';
+import React from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
-class Register extends Component {
-  constructor() {
-    super();
-    this.handleRegister = this.handleRegister.bind(this);
-  }
+/** Check login credentials, on success log user in */
+const handleCredentials = sendPartialInfo =>
+  () => {
+    const name = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-  handleRegister() {
-    axios.post('/create', { name: document.getElementById('username').value, password: document.getElementById('password').value })
-      .then((response) => {
-        console.log(response.status);
-        if (response.data !== null) {
-
-          // log in after registration
-          this.handleCredentials();
-
-        } else {
-          alert('Please type a username and password');
+    axios.post('/login', { name, password })
+      .then((res) => {
+        if (res.data !== null) {
+          const username = res.data.name;
+          sendPartialInfo(username, 'game');
         }
       })
-      .catch((err) => {
-        console.log(err);
-        alert('Please try again');
-      });
-  }
+      .catch(err => console.log('Invalid Login', err));
+  };
 
-  handleCredentials() {
-    axios.post('/login', { name: document.getElementById('username').value, password: document.getElementById('password').value })
-    .then((response) => {
-      if (response.data !== null) {
-        const username = response.data.name;
-        console.log('logging in...');
-        this.props.getBack(username, 'game');
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      alert('Invalid Login!');
-    });
-  }
+/** Add new user to database on success, then log newly created user in */
+const handleRegister = sendPartialInfo =>
+  () => {
+    const name = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-  onEnterPress(e) {
+    axios.post('/create', { name, password })
+      // log in after registration
+      .then((response) => {
+        if (response.data !== null) handleCredentials(sendPartialInfo)();
+        else console.log('Please type a username and password');
+      })
+      .catch(err => console.log('Invalid Signup', err));
+  };
+
+/** Button handler for pressing enter on <form> */
+const onEnterPress = sendPartialInfo =>
+  (e) => {
     e.preventDefault();
-    if (e.key === 'Enter') {
-      this.handleRegister();
-    }
-  }
+    if (e.key === 'Enter') handleRegister(sendPartialInfo)();
+  };
 
-  render() {
-    return (
-      <div className="register">
-        <div id="header"><h1>typeof</h1></div>
+// used in App.js
+const Register = ({ onClick, sendPartialInfo }) => {
+  const handleReg = handleRegister(sendPartialInfo);
+  const onPress = onEnterPress(sendPartialInfo);
 
-        <div className="register-box">
-          <h5> Register </h5>
-
-          <form onKeyUp={(event) => { this.onEnterPress(event); }}>
-            <input
-              placeholder="username"
-              type="text"
-              id="username"
-            />
-            <input
-              placeholder="password"
-              type="password"
-              id="password"
-            />
-          </form>
-          <button onClick={this.handleRegister} className="btn-primary btn-lg " > Register </button>
-          <p>Have an account? <a onClick={this.props.buttonClick} ><span className="link">Sign In</span></a></p>
+  return (
+    <div className="register">
+      <div id="header">
+        <h1>typeof</h1>
+      </div>
+      <div className="register-box">
+        <h5> Register </h5>
+        <form onKeyUp={onPress}>
+          <input
+            placeholder="username"
+            type="text"
+            id="username"
+          />
+          <input
+            placeholder="password"
+            type="password"
+            id="password"
+          />
+        </form>
+        <button onClick={handleReg} className="btn-primary btn-lg large-btn" > Register </button>
+        <div className="login-text-container">
+          <p>Have an account?</p>
+          <button className="small-btn" onClick={onClick} >Sign In</button>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+Register.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  sendPartialInfo: PropTypes.func.isRequired,
+};
 
 export default Register;

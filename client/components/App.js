@@ -40,11 +40,11 @@ class App extends Component {
     const { login, register, game, gameover } = ViewEnum
     switch (view) {
       case login: {
-        return <Login buttonClick={this.refreshView('register')} getBack={this.sendPartialInfo} />
+        return <Login onClick={this.refreshView('register')} sendPartialInfo={this.sendPartialInfo} />
         break;
       }
       case register: {
-        return <Register buttonClick={this.refreshView('login')} getBack={this.sendPartialInfo} />
+        return <Register onClick={this.refreshView('login')} sendPartialInfo={this.sendPartialInfo} />
         break;
       }
       case game: {
