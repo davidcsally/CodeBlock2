@@ -15,7 +15,6 @@ class Leaderboard extends Component {
   loadhighscores = () => {
     axios.get('/highscores').then((data) => {
       this.setState({ top10: data.data })
-      console.log(this.state.top10)
     })
 
   }
