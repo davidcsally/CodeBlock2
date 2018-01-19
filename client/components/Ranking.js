@@ -1,26 +1,27 @@
-import React, { Component } from 'react';
+import React from 'react';
+import Proptypes from 'prop-types';
 
-class Ranking extends Component {
-  render() {
-    let name = this.props.name
-    let score = this.props.score
-    let accuracy = this.props.accuracy
+const Ranking = ({ name, score, accuracy }) => (
+  <div className="ranking">
+    Name: {name}
+    <br />
+    Score: {score}
+    <br />
+    Accuracy: {accuracy}
+    <br />
+    <br />
+  </div>
+);
 
-    if (score === undefined) score = 0
-    if (accuracy === undefined) accuracy = 0;
+Ranking.propTypes = {
+  name: Proptypes.string.isRequired,
+  score: Proptypes.number,
+  accuracy: Proptypes.number,
+};
 
-    return (
-      <div className="ranking">
-        Name: {name}
-        <br />
-        Score: {score}
-        <br />
-        Accuracy: {accuracy}
-        <br />
-        <br />
-      </div>
-    );
-  }
-}
+Ranking.defaultProps = {
+  score: 0,
+  accuracy: 0,
+};
 
 export default Ranking;
