@@ -58,7 +58,7 @@ class CodeBlock extends Component {
 
           alert("Good Job");
           //update data in server (axios patch request)
-          axios.patch('http://localhost:3000/updateUser', { name: this.props.user, score: this.state.score, accuracy: this.state.accuracy, WPM: 0 });
+          axios.patch('/updateUser', { name: this.props.user, score: this.state.score, accuracy: this.state.accuracy, WPM: 0 });
           console.log('updated database')
 
           // reset game
@@ -118,7 +118,7 @@ class CodeBlock extends Component {
       accuracy: this.state.accuracy,
       WPM: 0,
     }
-    axios.patch('http://localhost:3000/updateUser', newData);
+    axios.patch('/updateUser', newData);
   }
 
   /** function to countdown the timer, this will update the state every second */
@@ -143,7 +143,6 @@ class CodeBlock extends Component {
   }
 
   render() {
-    // console.log('this.state.code: ', this.state.code);
     return (
       <div className="code-block">
         <div className="header"><h1>typeof</h1></div>
