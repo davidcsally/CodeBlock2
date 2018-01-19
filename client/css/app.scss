@@ -51,10 +51,23 @@ body {
 .login input:hover::-webkit-input-placeholder{color:black}
 .register input:hover::-webkit-input-placeholder{color:black}
 
-.login button, .register button {
+.large-btn {
   width: 100%;
   font-family: "Roboto", sans-serif;
   margin-bottom: 10px;
+  border: none;
+}
+
+.small-btn {
+  width: auto;
+  color: blue;
+  border: none;
+}
+
+.login-text-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .login form, .register form {
@@ -65,10 +78,6 @@ body {
   background-color: #0069d9;
   border-color: #0069d9;
   cursor: pointer;    
-}
-
-.link {
-  color: blue;
 }
 
 .link:hover {
