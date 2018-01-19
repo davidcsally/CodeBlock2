@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/server.js",
-    "build": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "build": "node node_modules/webpack/bin/webpack.js -p",
+    "dev": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "pack": "node node_modules/webpack/bin/webpack.js -w",
     "server": "node server/server.js",
     "test": "export NODE_ENV=test && mocha --timeout 8000 test/"
