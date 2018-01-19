@@ -1,13 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-class Timer extends Component {
-  render() {
-    return (
-      <div className="clock">
-        <p>{this.props.seconds}</p>
-      </div>
-    );
-  }
-}
+const Timer = ({ seconds }) => (
+  <div className="clock">
+    <p>{seconds}</p>
+  </div>
+);
+
+Timer.propTypes = {
+  seconds: PropTypes.number,
+};
+
+Timer.defaultProps = {
+  seconds: 10,
+};
 
 export default Timer;

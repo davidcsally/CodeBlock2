@@ -138,10 +138,7 @@ class CodeBlock extends Component {
       this.refs.userinput.value = "";
 
       // reset game
-      console.log('*******')
-      console.log('RESET');
-      console.log('********')
-      this.props.refreshView('gameover');
+      this.props.refreshView();
     }
   }
 

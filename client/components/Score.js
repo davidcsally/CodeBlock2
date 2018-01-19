@@ -1,13 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-class Score extends Component {
-  render() {
-    return (
-      <div>
-        score: {this.props.score}
-      </div>
-    );
-  }
-}
+const Score = ({ score }) => (
+  <div>
+    score: {score}
+  </div>
+);
+
+Score.propTypes = {
+  score: PropTypes.number,
+};
+
+Score.defaultProps = {
+  score: 0,
+};
 
 export default Score;

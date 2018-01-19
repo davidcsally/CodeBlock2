@@ -1,13 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-class Accuracy extends Component {
-  render() {
-    return (
-      <div>
-        Accuracy: {this.props.accuracy}%
-      </div>
-    );
-  }
-}
+const Accuracy = ({ accuracy }) => (
+  <div>
+    Accuracy: {accuracy}%
+  </div>
+);
+
+Accuracy.propTypes = {
+  accuracy: PropTypes.number,
+};
+
+Accuracy.defaultProps = {
+  accuracy: 100,
+};
 
 export default Accuracy;

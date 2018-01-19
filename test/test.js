@@ -1,3 +1,4 @@
+/* eslint-env mocha */
 // Requires these files in -> npm install them
 const expect = require('expect');
 const mongoose = require('mongoose');
@@ -158,14 +159,14 @@ describe('Database interactions', () => {
 
     // write hella users to DB
     const arr = [];
-    
+
     for (let i = 0; i < 15; i++) {
       const newObj = { name: `David${i}`, score: (i * 10), password: 1234 };
       arr.push(newObj);
     }
 
     Model.create(arr, (err, docs) => {
-      if (err) throw(err);
+      if (err) throw (err);
       // then test DB
       request.get('http://localhost:3000/highscores', (err, res, body) => {
         const bod = JSON.parse(body);
