@@ -7,20 +7,21 @@ const userController = require('../controllers/userController');
 const cookieController = require('../controllers/cookieController');
 const sessionController = require('../controllers/sessionController');
 
-mongoose.Promise = global.Promise; // re-assign mongoose promises to ES6 to remove depricated message
+// re-assign mongoose promises to ES6 to remove depricated message
+mongoose.Promise = global.Promise;
 
 const port = process.env.PORT || 3000;
 const app = express();
-let uri;
 
 // Select between TEST and REAL databases
-if (process.env.NODE_ENV === 'test') uri = 'mongodb://localhost/user';
-else uri = 'mongodb://user:password@ds163053.mlab.com:63053/codeblock';
+const uri = (process.env.NODE_ENV === 'test')
+  ? 'mongodb://localhost/user'
+  : 'mongodb://user:password@ds163053.mlab.com:63053/codeblock';
 
 // Connect to MongooseDB
 const db = mongoose.connection.openUri(uri);
 db.on('error', () => console.log('ERROR connecting to database'));
-db.once('open', () => console.log(`Sucessfully connected to database ${uri}`));
+db.once('open', () => console.log('Sucessfully connected to database'));
 
 // Use middleware
 app.use(
@@ -91,12 +92,7 @@ app.get('/highscores', userController.getTopUsers, sessionController.isLoggedIn,
  * Default route, will serve the App
  *
 */
-app.get('/', (req, res) => {
-  // res.render('index.html');
-  // res.end();
-});
+app.get('/', (req, res) => {});
 
 /** Start the server */
-app.listen(port, () => {
-  console.log(`CodeBlock is listening at: ${port}`);
-});
+app.listen(port, () => console.log(`CodeBlock is listening at: ${port}`));
