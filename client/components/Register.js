@@ -69,7 +69,7 @@ class Register extends Component {
             />
           </form>
           <button onClick={this.handleRegister} className="btn-primary btn-lg " > Register </button>
-          <p>Have an account? <a onClick={() => {this.props.buttonClick('login'); }} ><span className="link">Sign In</span></a></p>
+          <p>Have an account? <a onClick={this.props.buttonClick} ><span className="link">Sign In</span></a></p>
         </div>
       </div>
     );
