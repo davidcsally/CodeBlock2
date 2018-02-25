@@ -3,10 +3,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const userController = require('../controllers/userController');
-const cookieController = require('../controllers/cookieController');
-const sessionController = require('../controllers/sessionController');
+const userController = require('./controllers/userController');
+const cookieController = require('./controllers/cookieController');
+const sessionController = require('./controllers/sessionController');
+const { keepAlive } = require('./util/serverPing');
 
+keepAlive();
 // re-assign mongoose promises to ES6 to remove depricated message
 mongoose.Promise = global.Promise;
 
@@ -92,7 +94,7 @@ app.get('/highscores', userController.getTopUsers, sessionController.isLoggedIn,
  * Default route, will serve the App
  *
 */
-app.get('/', (req, res) => {});
+app.get('/', (req, res) => { });
 
 /** Start the server */
 app.listen(port, () => console.log(`CodeBlock is listening at: ${port}`));
