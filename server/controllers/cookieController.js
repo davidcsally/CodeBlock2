@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: 0 */
 const User = require('../model/UserModel');
 
 const cookieController = {
